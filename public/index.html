@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Image Downloader</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <h1>Image Downloader</h1>
+    <form action="/search" method="POST">
+        <div class="elements">
+            <input type="text" id="keyword" name="keyword" placeholder="Enter a keyword" required>
+            <button id="btn1" type="submit">Search</button>
+        </div>
+        
+    </form>
+
+    <h2>Search Results</h2>
+    <h1>Download Zip File</h1>
+    <!-- <a href="http://localhost:3000/myFolder-zip" download>Download myFolder.zip</a> -->
+    <form action="http://localhost:3000/download" method="POST">
+        <div class="btnflex">
+            <button id="btn2" type="submit">Download</button>
+        </div>
+        <ul id="imageList"></ul>
+    </form>
+
+    <script>
+        // document.getElementById('btn').addEventListener('click', (e) => {
+        //     e.preventDefault();
+        //     alert('clicked');
+        // });
+
+        document.querySelector('form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const keyword = event.target.keyword.value;
+            const response = await fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `keyword=${encodeURIComponent(keyword)}`,
+            });
+            const data = await response.json();
+            const imageList = document.getElementById('imageList');
+            imageList.innerHTML = '';
+
+            if (data.results) {
+                data.results.forEach((result, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <label>
+                            <input type="checkbox" name="selectedImages" value="${result.image}" />
+                            Image ${index + 1}
+                            <img src="${result.image}" alt="Image ${index + 1}" width="100" />
+                        </label>
+                    `;
+                    imageList.appendChild(listItem);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

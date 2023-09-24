@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>image</title>
+    <style>
+        .gallery {
+            display: flex;
+
+        }
+
+        .singleImg {
+            border: 1px solid black;
+            margin: 10px;
+            background-color: antiquewhite;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <h1>Image Downloader</h1>
+        <form action="/search" method="POST">
+            <input type="text" name="keyword" placeholder="Enter a keyword">
+            <button type="submit">Search</button>
+        </form>
+
+        <h2>Search Results</h2>
+
+        <div class="gallery">
+            <div class="singleImg">
+                <img src="https://picsum.photos/200/300" alt="">
+                <input type="checkbox" name="" id="">
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const keyword = e.target.keyword.value
+            alert(keyword);
+            const response = await fetch('/search',{
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `keyword=${encodeURIComponent(keyword)}`,
+            })
+            const data = await response.json()
+            console.log(data);
+        })
+    </script>
+</body>
+
+</html>

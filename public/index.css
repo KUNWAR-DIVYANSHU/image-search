@@ -1,0 +1,70 @@
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#imageList {
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+}
+ img{
+   width: 25vw;
+   height: auto;
+}
+
+li {
+    margin-right: 10px;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1,h2{
+    text-align: center;
+}
+
+input{
+    width: 20rem;
+    height: 2rem;
+}
+#btn1{
+    width: 100px;
+    height: 50px;
+   background-color: rgb(187, 219, 219);
+   border-radius: 20%; 
+   margin-left: 10px;
+   cursor: pointer;
+    
+}
+.elements{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btnflex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#btn2{
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+     
+}
