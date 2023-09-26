@@ -48,12 +48,13 @@
 
             if (data.results) {
                 data.results.forEach((result, index) => {
+                    // console.log(result);
                     const listItem = document.createElement('li');
                     listItem.innerHTML = `
                         <label>
                             <input type="checkbox" name="selectedImages" value="${result.image}" />
                             Image ${index + 1}
-                            <img src="${result.image}" alt="Image ${index + 1}" width="100" />
+                            <img src="${result.thumbnail}" alt="Image ${index + 1}" width="100" />
                         </label>
                     `;
                     imageList.appendChild(listItem);
