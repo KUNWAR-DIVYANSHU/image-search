@@ -28,46 +28,38 @@ app.post('/search', async (req, res) => {
 
 app.post('/download', async (req, res) => {
     const selectedImages = req.body.selectedImages;
-    // console.log("array or not "+Array.isArray(selectedImages));
-    console.log(selectedImages);
 
     if (!selectedImages || selectedImages.length === 0) {
         return res.status(400).send({ error: 'No images selected for download' });
     }
-    const imageUrl = ['https://starsunfolded.com/wp-content/uploads/2017/12/K-K-Singer-2.jpg', 'https://i5.walmartimages.com/asr/9142e938-9aff-4212-ac7a-09b9b9884dfe.b275687491a131e90eb8db6a6bc288e7.jpeg', 'https://i5.walmartimages.com/asr/9142e938-9aff-4212-ac7a-09b9b9884dfe.b275687491a131e90eb8db6a6bc288e7.jpeg'];
+
     const outputFilePath = 'downloaded_images';
 
     const downloadImg = async (url, index) => {
-        axios
-            .get(url, {
-                headers: {
-                    'User-Agent': 'Your User Agent String',
-                }, responseType: 'stream'
-            })
-            .then(async (response) => {
-                const num = index.toString()
-                await response.data.pipe(fs.createWriteStream(`${outputFilePath}/downloaded_image${num}.jpg`));
-
-                response.data.on('end', () => {
-                    console.log('Image downloaded successfully.');
-                });
-
-
-            })
-            .catch((error) => {
-                console.error('Error downloading the image:', error);
+        try {
+            const response = await axios.get(url, {
+                responseType: 'stream',
             });
-    }
 
-
-    const downloadPromises = selectedImages.map(async (url, index) => {
-        console.log(index);
-        await downloadImg(url, index);
-        index++;
-    });
+            await response.data.pipe(fs.createWriteStream(`${outputFilePath}/downloaded_image${index}.jpg`));
+            return new Promise((resolve) => {
+                response.data.on('end', () => {
+                    console.log(`Image ${index} downloaded successfully.`);
+                    resolve();
+                });
+            });
+        } catch (error) {
+            console.error('Error downloading the image:', error);
+            throw error;
+        }
+    };
 
     try {
-        await Promise.all(downloadPromises); // Wait for all image downloads to complete
+        // Use Promise.all to wait for all image downloads to complete
+        await Promise.all(selectedImages.map(async (url, index) => {
+            console.log(index);
+            await downloadImg(url, index);
+        }));
 
         const sourceFolder = 'downloaded_images';
         const zipFileName = 'myFolder.zip';
@@ -93,6 +85,7 @@ app.post('/download', async (req, res) => {
         res.status(500).send({ error: 'Internal Server Error' });
     }
 });
+
 // Replace with the desired name for the downloaded file
 app.get('/download-zip', (req, res) => {
     const zipFileName = 'myFolder.zip';
